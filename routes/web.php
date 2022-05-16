@@ -23,8 +23,15 @@ Route::get('/', function () {
 });
 
 //Route for Single listings
-Route::get('/listing/{id}', function ($id){
+// Route::get('/listing/{id}', function ($id){
+//     return view('listing',[
+//         'listing' =>Listing::find($id)
+//     ]);
+// });
+
+// Alternate way while using eloquent
+Route::get('/listing/{id}', function(listing $id){
     return view('listing',[
-        'listing' =>Listing::find($id)
+        'listing' => $id
     ]);
 });
