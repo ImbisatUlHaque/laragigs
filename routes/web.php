@@ -47,6 +47,13 @@ use App\Http\Controllers\ListingController;
 
 // // Alternate way while using 
 
+// Show all job listing
 Route::get('/', [ListingController::class, 'index']);
 
-Route::get('/listing/{listing}', [ListingController::class, 'Show']);
+// Create Job
+Route::get('/listings/create', [ListingController::class, 'create']);
+
+Route::post('/listings', [ListingController::class, 'store']);
+
+// Single Job Lising
+Route::get('/listings/{listing}', [ListingController::class, 'show']);
