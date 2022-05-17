@@ -53,6 +53,7 @@ Route::get('/', [ListingController::class, 'index']);
 // Create Job
 Route::get('/listings/create', [ListingController::class, 'create']);
 
+// Job store routes
 Route::post('/listings', [ListingController::class, 'store']);
 
 // Single Job Lising
