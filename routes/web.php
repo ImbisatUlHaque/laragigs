@@ -2,6 +2,7 @@
 
 use App\Models\Listing;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\ListingController;
 
 /*
@@ -56,5 +57,24 @@ Route::get('/listings/create', [ListingController::class, 'create']);
 // Job store routes
 Route::post('/listings', [ListingController::class, 'store']);
 
+
 // Single Job Lising
 Route::get('/listings/{listing}', [ListingController::class, 'show']);
+
+// Update listing
+Route::PUT('/listings/{listing}', [ListingController::class, 'update']);
+
+// Delete listins
+Route::DELETE('/listings/{listing}', [ListingController::class, 'destroy']);
+
+// Job edit
+Route::get('/listings/{listing}/edit', [ListingController::class, 'edit']);
+
+// User Registration
+Route::get('/register/create', [UserController::class, 'create']);
+
+// Store User
+Route::post('/users', [UserController::class, 'store']);
+
+// Logout
+Route::post('/logout', [UserController::class, 'logout']);

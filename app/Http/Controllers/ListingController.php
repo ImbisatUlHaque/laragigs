@@ -15,7 +15,7 @@ class ListingController extends Controller
             // 'listings' => Listing::all()
 
             // ! List all the items with pagination
-            'listings' => Listing::latest()->filter(request(['tag', 'search']))->paginate(2)
+            'listings' => Listing::latest()->filter(request(['tag', 'search']))->paginate(3)
 
             // ! simplePagination style
             // 'listings' => Listing::latest()->filter(request(['tag', 'search']))->simplePaginate(2)
@@ -36,7 +36,7 @@ class ListingController extends Controller
     }
 
     public function store(Request $request){
-        // dd($request->file['logo']);
+        // dd($request->file('logo'));
 
         $formField = $request->validate([
             'company' => ['required', Rule::unique('listings','company')],
@@ -47,7 +47,7 @@ class ListingController extends Controller
             'tags' => 'required',
             'description' => 'required'
         ]);
-        dd($request->File('logo')->store('public'));
+        // dd($request->File('logo')->store('public'));
 
 
         if ($request->hasFile('logo'))
@@ -55,11 +55,57 @@ class ListingController extends Controller
             $formField['logo'] = $request->File('logo')->store('logos','public');
         }
 
-        // dd($request->File('logo'));
+        // dd($formField['logo']);
 
 
         Listing::create($formField);
 
         return redirect('/')->with('message','Job has been submit successfully');
+    }
+
+    public function edit(Listing $listing)
+    {
+        // dd($listing->description);
+        return view('listings.edit',[
+            'listing' => $listing
+        ]);
+    }
+
+    // Update
+    public function update(Request $request, Listing $listing){
+        // dd($request->file('logo'));
+
+        $formField = $request->validate([
+            'company' => 'required',
+            'title' => 'required',
+            'location' => 'required',
+            'email' => ['required','email'],
+            'website' => 'required',
+            'tags' => 'required',
+            'description' => 'required'
+        ]);
+        // dd($request->File('logo')->store('public'));
+
+
+        if ($request->hasFile('logo'))
+        {
+            $formField['logo'] = $request->File('logo')->store('logos','public');
+        }
+
+        // dd($formField['logo']);
+
+
+        $listing->update($formField);
+
+        // return back()->with('message','Job has been edited successfully');
+        return redirect('/listings/'. $listing->id)->with('message','Job has been edited successfully');
+
+    }
+
+    public function destroy(Listing $listing)
+    {
+        $listing->delete();
+
+        return redirect('/')->with('message','Job has been deleted');
     }
 }
