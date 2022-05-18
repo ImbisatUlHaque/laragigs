@@ -52,29 +52,37 @@ use App\Http\Controllers\ListingController;
 Route::get('/', [ListingController::class, 'index']);
 
 // Create Job
-Route::get('/listings/create', [ListingController::class, 'create']);
+Route::get('/listings/create', [ListingController::class, 'create'])->middleware('auth');
 
 // Job store routes
-Route::post('/listings', [ListingController::class, 'store']);
+Route::post('/listings', [ListingController::class, 'store'])->middleware('auth');
 
+// Create Job
+Route::get('/listings/manage', [ListingController::class, 'manage'])->middleware('auth');
 
 // Single Job Lising
 Route::get('/listings/{listing}', [ListingController::class, 'show']);
 
 // Update listing
-Route::PUT('/listings/{listing}', [ListingController::class, 'update']);
+Route::PUT('/listings/{listing}', [ListingController::class, 'update'])->middleware('auth');
 
 // Delete listins
-Route::DELETE('/listings/{listing}', [ListingController::class, 'destroy']);
+Route::DELETE('/listings/{listing}', [ListingController::class, 'destroy'])->middleware('auth');
 
 // Job edit
-Route::get('/listings/{listing}/edit', [ListingController::class, 'edit']);
+Route::get('/listings/{listing}/edit', [ListingController::class, 'edit'])->middleware('auth');
 
 // User Registration
-Route::get('/register/create', [UserController::class, 'create']);
+Route::get('/register/create', [UserController::class, 'create'])->middleware('guest');
 
 // Store User
-Route::post('/users', [UserController::class, 'store']);
+Route::post('/users', [UserController::class, 'store'])->middleware('guest');
 
 // Logout
-Route::post('/logout', [UserController::class, 'logout']);
+Route::post('/logout', [UserController::class, 'logout'])->middleware('auth');
+
+// Login
+Route::get('/login', [UserController::class, 'login'])->name('login')->middleware('guest');
+
+// Login user authenticate
+Route::post('/users/authenticate', [UserController::class, 'authenticate'])->middleware('guest');

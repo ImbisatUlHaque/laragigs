@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Listing;
-use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ListingController extends Controller
 {
@@ -36,7 +37,7 @@ class ListingController extends Controller
     }
 
     public function store(Request $request){
-        // dd($request->file('logo'));
+        // dd($request->user_id);
 
         $formField = $request->validate([
             'company' => ['required', Rule::unique('listings','company')],
@@ -48,6 +49,11 @@ class ListingController extends Controller
             'description' => 'required'
         ]);
         // dd($request->File('logo')->store('public'));
+
+        // $formField['user_id'] = $request->user_id;
+        $formField['user_id'] = auth()->id();
+        // dd(auth()->id());
+
 
 
         if ($request->hasFile('logo'))
@@ -73,7 +79,11 @@ class ListingController extends Controller
 
     // Update
     public function update(Request $request, Listing $listing){
-        // dd($request->file('logo'));
+        //  dd($request->user_id);
+
+        if ($listing->user_id != auth()->id()) {
+            abort('403', 'Unauthorized');
+        }
 
         $formField = $request->validate([
             'company' => 'required',
@@ -92,6 +102,8 @@ class ListingController extends Controller
             $formField['logo'] = $request->File('logo')->store('logos','public');
         }
 
+        $formField['user_id'] = $request->user_id;
+
         // dd($formField['logo']);
 
 
@@ -104,8 +116,28 @@ class ListingController extends Controller
 
     public function destroy(Listing $listing)
     {
+        if ($listing->user_id != auth()->id()) {
+            abort('403', 'Unauthorized');
+        }
+        
         $listing->delete();
 
         return redirect('/')->with('message','Job has been deleted');
+    }
+
+    public function manage()
+    {
+        // $user = User::find(auth()->user()->id);
+        return view('listings.manage',['listings' => auth()->user()->listing()->get()]);
+
+        // this method is giving me a warrning but it still works
+        // dd(auth()->user()->listings()->get());
+      
+        // found this method with tinker will use it to hide the warrning
+        // $user = User::find(auth()->user()->id);
+        
+        // return view('listings.manage',[
+        //     'listings' => $user->listings
+        // ]);
     }
 }

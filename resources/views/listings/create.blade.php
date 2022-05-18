@@ -11,6 +11,7 @@
 
         <form action="/listings" method="POST" enctype="multipart/form-data">
             @csrf
+            {{-- <input type="hidden" name="user_id" value="{{auth()->user()->id}}"> --}}
             <div class="mb-6">
                 <label
                     for="company"
